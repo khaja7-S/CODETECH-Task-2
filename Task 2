@@ -1,0 +1,89 @@
+# Inventory Management System
+
+class Item:
+    def _init(self, name, quantity, price):  # Corrected __init_ method
+        self.name = name
+        self.quantity = quantity
+        self.price = price
+
+    def add_quantity(self, quantity):
+        self.quantity += quantity
+
+    def remove_quantity(self, quantity):
+        if quantity > self.quantity:
+            print(f"Not enough {self.name} in stock!")
+        else:
+            self.quantity -= quantity
+
+    def _str(self):  # Corrected __str_ method
+        return f"{self.name}: {self.quantity} units at ${self.price:.2f} each"
+
+
+class Inventory:
+    def _init(self):  # Corrected __init_ method
+        self.items = {}
+
+    def add_item(self, name, quantity, price):
+        if name in self.items:
+            self.items[name].add_quantity(quantity)
+        else:
+            self.items[name] = Item(name, quantity, price)
+
+    def remove_item(self, name, quantity):
+        if name in self.items:
+            self.items[name].remove_quantity(quantity)
+            if self.items[name].quantity == 0:
+                del self.items[name]
+                print(f"{name} is now out of stock and removed from inventory.")
+        else:
+            print(f"Item {name} not found in inventory.")
+
+    def view_inventory(self):
+        if not self.items:
+            print("Inventory is empty.")
+        else:
+            for item in self.items.values():
+                print(item)
+
+
+def print_menu():
+    print("\nInventory Menu:")
+    print("1. Add a new item or restock")
+    print("2. Remove items")
+    print("3. View current inventory")
+    print("4. Exit")
+
+
+def main():
+    inventory = Inventory()
+
+    while True:
+        print_menu()
+        choice = input("Enter choice (1-4): ")
+
+        if choice == '1':
+            name = input("Enter item name: ")
+            quantity = int(input("Enter item quantity: "))
+            price = float(input("Enter item price: "))
+            inventory.add_item(name, quantity, price)
+            print(f"{quantity} units of {name} added to inventory.")
+
+        elif choice == '2':
+            name = input("Enter item name: ")
+            quantity = int(input(f"Enter quantity to remove from {name}: "))
+            inventory.remove_item(name, quantity)
+
+        elif choice == '3':
+            print("\nCurrent Inventory:")
+            inventory.view_inventory()
+
+        elif choice == '4':
+            print("Exiting inventory system.")
+            break
+
+        else:
+            print("Invalid choice. Please choose again.")
+
+
+if _name_ == "_main":  # Corrected __name_ == "_main_"
+    main()
